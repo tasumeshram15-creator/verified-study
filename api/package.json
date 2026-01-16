@@ -1,23 +1,15 @@
-{{
+{
   "name": "verified-study-api",
   "version": "1.0.0",
-  "description": "Backend API for Verified Study Material Generator",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "node index.js",
-    "start": "node index.js"
+    "dev": "node index.js"
   },
-  "keywords": [],
-  "author": "Tasmay",
-  "license": "ISC",
   "dependencies": {
+    "express": "^4.18.2",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "openai": "^6.16.0"
+    "dotenv": "^16.0.3",
+    "openai": "^4.0.0"
   }
-}
-
-  
 }
