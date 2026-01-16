@@ -1,45 +1,55 @@
-// index.js
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import OpenAI from "openai";
+"use client";
+import { useState } from "react";
 
-dotenv.config();
-const app = express();
-app.use(cors());
-app.use(express.json());
+export default function Home() {
+  const [subject, setSubject] = useState("");
+  const [topic, setTopic] = useState("");
+  const [notes, setNotes] = useState("");
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const handleGenerate = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subject, topic }),
+      });
+      const data = await response.json();
+      setNotes(data.notes || "No notes received");
+    } catch (error) {
+      setNotes("Failed to fetch notes");
+    }
+  };
 
-// Simple health check
-app.get("/health", (req, res) => {
-  res.json({ ok: true, service: "verified-study-api" });
-});
+  return (
+    <main className="p-10">
+      <h1 className="text-3xl font-bold mb-4">Verified Study</h1>
+      <input
+        type="text"
+        value={subject}
+        onChange={(e) => setSubject(e.target.value)}
+        placeholder="Enter subject (e.g. Physics)"
+        className="border p-2 mb-4 w-full max-w-md"
+      />
+      <input
+        type="text"
+        value={topic}
+        onChange={(e) => setTopic(e.target.value)}
+        placeholder="Enter topic (e.g. Work, Power, Energy)"
+        className="border p-2 mb-4 w-full max-w-md"
+      />
+      <button
+        onClick={handleGenerate}
+        className="px-6 py-3 bg-blue-600 text-white rounded-lg"
+      >
+        Generate Notes
+      </button>
 
-// Generate study material
-app.post("/generate", async (req, res) => {
-  try {
-    const { subject = "Physics", topic = "Work, Power, Energy" } = req.body;
-
-    const prompt = `Create verified JEE notes for ${subject} on topic "${topic}".
-    Use NCERT-aligned definitions and formulas. Avoid mistakes.`;
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: "You are a verified study material generator." },
-        { role: "user", content: prompt }
-      ],
-      temperature: 0.2
-    });
-
-    const content = completion.choices[0].message.content;
-    res.json({ ok: true, notes: content });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ ok: false, error: "generation_failed" });
-  }
-});
-
-const PORT = 4000;
-app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));
+      {notes && (
+        <div className="mt-6 p-4 border rounded-lg bg-gray-50">
+          <h2 className="text-xl font-semibold mb-2">Generated Notes:</h2>
+          <p>{notes}</p>
+        </div>
+      )}
+    </main>
+  );
+}
