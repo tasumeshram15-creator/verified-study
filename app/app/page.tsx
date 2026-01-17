@@ -1,4 +1,4 @@
-"use client"; // enables client-side interactivity
+"use client";
 
 import { useState } from "react";
 
@@ -6,11 +6,14 @@ export default function Home() {
   const [subject, setSubject] = useState("");
   const [topic, setTopic] = useState("");
   const [notes, setNotes] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleGenerate = async () => {
+    setLoading(true);
+    setNotes("");
     try {
       const response = await fetch("http://localhost:4000/generate", {
-        method: "POST", // ✅ must be POST to match backend
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           subject: subject || "Physics",
@@ -23,6 +26,8 @@ export default function Home() {
     } catch (error) {
       console.error("Error fetching notes:", error);
       setNotes("Failed to fetch notes from backend");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,6 +40,7 @@ export default function Home() {
         Generate AI-powered study notes for JEE/NEET.
       </p>
 
+      {/* Input for subject */}
       <input
         type="text"
         value={subject}
@@ -43,6 +49,7 @@ export default function Home() {
         className="border p-2 mb-4 w-full max-w-md"
       />
 
+      {/* Input for topic */}
       <input
         type="text"
         value={topic}
@@ -51,15 +58,27 @@ export default function Home() {
         className="border p-2 mb-4 w-full max-w-md"
       />
 
+      {/* Generate button with spinner */}
       <button
         onClick={handleGenerate}
-        className="px-6 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+        disabled={loading}
+        className={`px-6 py-3 rounded-lg text-white transition ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+          }`}
       >
-        Generate Notes
+        {loading ? (
+          <div className="flex items-center space-x-2">
+            {/* Spinner circle */}
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            <span>Generating...</span>
+          </div>
+        ) : (
+          "Generate Notes"
+        )}
       </button>
 
+      {/* Notes output with fade-in animation */}
       {notes && (
-        <div className="mt-8 p-4 border rounded-lg bg-white dark:bg-zinc-800 w-full max-w-xl">
+        <div className="mt-8 p-4 border rounded-lg bg-white dark:bg-zinc-800 w-full max-w-xl animate-fadeIn">
           <h2 className="text-xl font-semibold mb-2">Generated Notes:</h2>
           <p className="text-zinc-700 dark:text-zinc-200 whitespace-pre-line">
             {notes}
