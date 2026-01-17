@@ -78,7 +78,7 @@ export default function Home() {
 
       {/* Notes output with fade-in animation */}
       {notes && (
-        <div className="mt-8 p-4 border rounded-lg bg-white dark:bg-zinc-800 w-full max-w-xl animate-fadeIn">
+        <div className="mt-8 p-4 border rounded-lg bg-white dark:bg-zinc-800 w-full max-w-xl fade-in">
           <h2 className="text-xl font-semibold mb-2">Generated Notes:</h2>
           <p className="text-zinc-700 dark:text-zinc-200 whitespace-pre-line">
             {notes}
@@ -88,4 +88,3 @@ export default function Home() {
     </main>
   );
 }
-
