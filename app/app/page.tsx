@@ -15,10 +15,7 @@ export default function Home() {
       const response = await fetch("http://localhost:4000/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          subject: subject || "Physics",
-          topic: topic || "Work, Power, Energy",
-        }),
+        body: JSON.stringify({ subject, topic }),
       });
 
       const data = await response.json();
@@ -40,7 +37,6 @@ export default function Home() {
         Generate AI-powered study notes for JEE/NEET.
       </p>
 
-      {/* Input for subject */}
       <input
         type="text"
         value={subject}
@@ -49,16 +45,14 @@ export default function Home() {
         className="border p-2 mb-4 w-full max-w-md"
       />
 
-      {/* Input for topic */}
       <input
         type="text"
         value={topic}
         onChange={(e) => setTopic(e.target.value)}
-        placeholder="Enter topic (e.g. Work, Power, Energy)"
+        placeholder="Enter topic (e.g. Pythagorean Theorem)"
         className="border p-2 mb-4 w-full max-w-md"
       />
 
-      {/* Generate button with spinner */}
       <button
         onClick={handleGenerate}
         disabled={loading}
@@ -67,7 +61,6 @@ export default function Home() {
       >
         {loading ? (
           <div className="flex items-center space-x-2">
-            {/* Spinner circle */}
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
             <span>Generating...</span>
           </div>
@@ -76,15 +69,15 @@ export default function Home() {
         )}
       </button>
 
-      {/* Notes output with fade-in animation */}
       {notes && (
         <div className="mt-8 p-4 border rounded-lg bg-white dark:bg-zinc-800 w-full max-w-xl fade-in">
           <h2 className="text-xl font-semibold mb-2">Generated Notes:</h2>
-          <p className="text-zinc-700 dark:text-zinc-200 whitespace-pre-line">
+          <div className="prose prose-zinc dark:prose-invert whitespace-pre-line">
             {notes}
-          </p>
+          </div>
         </div>
       )}
     </main>
   );
 }
+
