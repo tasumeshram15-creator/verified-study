@@ -1,103 +1,126 @@
+// server.js
 import express from "express";
-import bodyParser from "body-parser";
 import cors from "cors";
+import bodyParser from "body-parser";
 
 const app = express();
+const PORT = 4000;
+
 app.use(cors());
 app.use(bodyParser.json());
 
-// Dummy raw notes generator (replace with AI logic later)
-async function generateNotes(subject, topic) {
-  return `Raw notes on ${topic} in ${subject}`;
+function buildPractice(difficulty, subject, topic) {
+  const sets = {
+    Beginner: `
+## 📝 Practice (Beginner)
+1. Define ${topic} in your own words.
+2. Solve a simple example related to ${topic}.
+### ✔ Answers
+1. ${topic} is introduced with a clear, simple definition.
+2. Example solved step-by-step with basic reasoning.
+`,
+    Intermediate: `
+## 📝 Practice (Intermediate)
+1. Apply ${topic} to a standard JEE-style problem.
+2. Use the core formula to compute a value with units.
+### ✔ Answers
+1. Worked solution with formula selection and justification.
+2. Numerical answer with dimensional analysis and explanation.
+`,
+    Advanced: `
+## 📝 Practice (Advanced)
+1. Derive ${topic} from first principles or laws.
+2. Solve a multi-step problem combining ${subject} subtopics.
+### ✔ Answers
+1. Full derivation with assumptions and boundary conditions.
+2. Structured solution with checks, edge cases, and final validation.
+`
+  };
+  return sets[difficulty] || sets.Intermediate;
 }
 
-// 🔥 Fully upgraded polish function with difficulty levels
-function polishNotes(subject, topic, rawNotes, difficulty = "Intermediate") {
-  const lowerSub = subject.toLowerCase();
-  let polished = "";
+function buildNotes(subject, topic, difficulty) {
+  const lower = subject.toLowerCase();
 
-  // Difficulty-based practice problems
-  const practiceProblems = {
-    Beginner: `
-## 📝 Practice Problems (Beginner)
-1. Define ${topic} in simple words.
-2. Solve a basic example related to ${topic}.
-### ✔ Answers
-1. ${topic} is explained simply.
-2. Example solved step-by-step.
-    `,
-    Intermediate: `
-## 📝 Practice Problems (Intermediate)
-1. Apply ${topic} to a standard JEE-style problem.
-2. Use formula to calculate a value.
-### ✔ Answers
-1. Worked solution with formula.
-2. Numerical answer with explanation.
-    `,
-    Advanced: `
-## 📝 Practice Problems (Advanced)
-1. Derive ${topic} from first principles.
-2. Solve a complex multi-step problem involving ${topic}.
-### ✔ Answers
-1. Full derivation shown.
-2. Advanced solution with reasoning.
-    `
-  };
+  const commonHeader = `# 📚 ${subject} — ${topic}
 
-  if (lowerSub.includes("math")) {
-    polished = `
-# 📖 Math Notes on ${topic}
+## 🎯 Exam intent
+- Focused for JEE/NEET style questions
+- Emphasis on conceptual clarity + formula fluency
+- Includes applications, pitfalls, and practice
 
-## Definition
-${rawNotes} — explained with clarity and precision.
+`;
 
-## 🔢 Formula
+  const generalSections = `
+## ✅ Key ideas
+- Definitions with intuition
+- Step-by-step worked examples
+- Common mistakes and how to avoid them
+
+## 🧠 Memory hooks
+- Mnemonics for quick recall
+- Visual cues and analogies
+
+## 🧩 Applications
+- Real-world or lab contexts
+- Typical exam scenarios
+
+`;
+
+  let core = "";
+
+  if (lower.includes("math")) {
+    core = `
+## 📖 Concept
+${topic} is explained with geometric/algebraic intuition and precise definitions.
+
+## 🔢 Core formulas
+- Pythagorean relation: \\(c^2 = a^2 + b^2\\)
+- Distance in coordinate plane: \\(d = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}\\)
+
+## ✍️ Worked example
+Given a right triangle with legs 3 and 4, the hypotenuse is:
 \
 
 \[
-c^2 = a^2 + b^2
+c = \\sqrt{3^2 + 4^2} = 5
 \\]
 
 
 
-## 🎯 Applications
-- Geometry problem solving
-- Distance formula
-- Right triangle checks
+## ⚠️ Pitfalls
+- Mixing up legs vs hypotenuse
+- Forgetting units or squaring errors
+`;
+  } else if (lower.includes("physics")) {
+    core = `
+## ⚡ Concept
+${topic} is framed via Newtonian mechanics and energy perspectives.
 
-${practiceProblems[difficulty]}
-    `;
-  } else if (lowerSub.includes("physics")) {
-    polished = `
-# ⚡ Physics Notes on ${topic}
+## 🔢 Core relations
+- Newton's second law: \\(F = ma\\)
+- Work-energy: \\(W = \\Delta K\\)
 
-## Concept
-${rawNotes} — explained with physical meaning.
-
-## 🔢 Formula
+## ✍️ Worked example
+A 2 kg mass accelerates at 3 m/s². Net force:
 \
 
 \[
-F = ma
+F = ma = 2 \\cdot 3 = 6\\ \\text{N}
 \\]
 
 
 
-## 🎯 Applications
-- Motion analysis
-- Energy calculations
-- Real-world problem solving
+## ⚠️ Pitfalls
+- Confusing net vs individual forces
+- Ignoring direction and sign conventions
+`;
+  } else if (lower.includes("chemistry")) {
+    core = `
+## 🧪 Concept
+${topic} is treated with molecular/stoichiometric reasoning.
 
-${practiceProblems[difficulty]}
-    `;
-  } else if (lowerSub.includes("chemistry")) {
-    polished = `
-# 🧪 Chemistry Notes on ${topic}
-
-## Concept
-${rawNotes} — explained with chemical context.
-
-## 🔢 Equations
+## 🔢 Balanced reaction
 \
 
 \[
@@ -106,39 +129,62 @@ ${rawNotes} — explained with chemical context.
 
 
 
-## 🎯 Applications
-- Reaction predictions
-- Lab experiments
-- Stoichiometry
+## ✍️ Worked example
+Moles of water from 4 mol H₂ (excess O₂):
+\
 
-${practiceProblems[difficulty]}
-    `;
+\[
+n_{H_2O} = 2 \\times n_{H_2} = 8\\ \\text{mol}
+\\]
+
+
+
+## ⚠️ Pitfalls
+- Not balancing coefficients
+- Unit conversion mistakes (mol, g, L)
+`;
   } else {
-    polished = `
-# 📖 General Notes on ${topic}
+    core = `
+## 📖 Concept
+${topic} is explained with definitions, examples, and exam framing.
 
-## Concept
-${rawNotes}
+## 🔢 Useful relations
+- Summaries of key identities or laws
+- When to apply each
 
-## Applications
-- Useful for JEE/NEET preparation
-- Strengthens conceptual clarity
+## ✍️ Worked example
+A typical exam-style problem is solved step-by-step with checks.
 
-${practiceProblems[difficulty]}
-    `;
+## ⚠️ Pitfalls
+- Misreading the question
+- Skipping validation of the final result
+`;
   }
 
-  return polished;
+  const practice = buildPractice(difficulty, subject, topic);
+
+  return `
+${commonHeader}
+${core}
+${generalSections}
+${practice}
+## 🧭 Quick revision
+- Re-derive one formula from memory
+- Solve one fresh problem without notes
+- Explain ${topic} to a friend in 60 seconds
+`;
 }
 
-// API endpoint
-app.post("/generate", async (req, res) => {
-  const { subject, topic, difficulty } = req.body;
-  const rawNotes = await generateNotes(subject, topic);
-  const polished = polishNotes(subject, topic, rawNotes, difficulty || "Intermediate");
-  res.json({ notes: polished });
+app.post("/generate", (req, res) => {
+  const { subject = "Math", topic = "Pythagorean Theorem", difficulty = "Intermediate" } = req.body || {};
+  const notes = buildNotes(subject, topic, difficulty);
+  res.json({ notes });
 });
 
-app.listen(4000, () => {
-  console.log("✅ Backend running on http://localhost:4000");
+app.get("/", (_req, res) => {
+  res.send("✅ Verified Study backend is running");
+});
+
+app.listen(PORT, () => {
+  console.log(`✅ Backend running on http://localhost:${PORT}`);
 });
