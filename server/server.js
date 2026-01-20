@@ -1,7 +1,10 @@
 // server.js
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express"
 import cors from "cors";
-import monogoose from "mongoose";
+import mongoose from "mongoose";
 import Note from "./models/Note.js";
 import bodyParser from "body-parser";
 
