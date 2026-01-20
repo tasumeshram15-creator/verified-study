@@ -1,6 +1,8 @@
 // server.js
-import express from "express";
+import express from "express"
 import cors from "cors";
+import monogoose from "mongoose";
+import Note from "./models/Note.js";
 import bodyParser from "body-parser";
 
 const app = express();
@@ -9,6 +11,15 @@ const PORT = 4000;
 app.use(cors());
 app.use(bodyParser.json());
 
+// ✅ Add MongoDB connection right after middleware
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch(err => console.error("❌ MongoDB connection error:", err));
+
+//you helper function (like buildpractice) stay here
 function buildPractice(difficulty, subject, topic) {
   const sets = {
     Beginner: `
@@ -175,9 +186,15 @@ ${practice}
 `;
 }
 
-app.post("/generate", (req, res) => {
+// ✅ Modify /generate route to also save notes
+app.post("/generate", async (req, res) => {
   const { subject = "Math", topic = "Pythagorean Theorem", difficulty = "Intermediate" } = req.body || {};
   const notes = buildNotes(subject, topic, difficulty);
+
+  // ✅ Save to MongoDB
+  const newNote = new Note({ userId, subject, topic, difficulty, notes });
+  await newNote.save();
+
   res.json({ notes });
 });
 
