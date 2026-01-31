@@ -1,0 +1,56 @@
+* [33m04db5be[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m update .gitignore
+* [33m144ddbf[m update .gitignore
+* [33m86c34d7[m Rollback 3 commits and reapply changes
+* [33me7dcffe[m Initial commit
+* [33m2a55992[m update package.json , package-lock.json
+* [33mab9c759[m update app
+* [33m0433dec[m update api
+* [33m9b4fbda[m update page.js
+* [33m5c0a9d0[m update server.js
+* [33m55e49ff[m update package-lock.json
+* [33m53bb6d8[m update package.json
+* [33m7ba594e[m update models
+* [33m67bf3b7[m updateplayground-1.monogodb.js
+* [33mb1409be[m update playground-2.mongodb.js
+* [33m3b0f553[m update package.json
+* [33mfd175c9[m update server.js , package-lock.json
+* [33m649b545[m update package.json , package-lock.json
+* [33m27c3c79[m update server.js
+* [33mb1e910f[m update page.tsx
+* [33mec7b32e[m update package-lock.json
+* [33m000225a[m update package.json
+* [33m4b0deee[m update package.json
+* [33m77fd343[m update package-lock.json
+* [33m2f1c51f[m update package.json
+* [33m44e5788[m update package.json
+* [33m722cf01[m update package.json
+* [33m6689ded[m update package.json
+* [33md333252[m update package-lock.json and project files
+* [33mb9aedf8[m update package.json and project files
+* [33m1cb4c3e[m update package-lock.json and project files
+* [33mdaab56b[m update server.js and project files
+* [33m173ef08[m update server.js and project files
+* [33mc4e572f[m update package-lock.json and project files
+* [33mf42257a[m Update package.json and project files
+* [33m585c5db[m Update project files
+* [33mb8df906[m Update package.json
+* [33ma8d8903[m Save changes to project files
+* [33m782a7a7[m Save changes to project files
+* [33m8a19c4f[m Save changes to project files
+* [33m79f6d8d[m Fix globals.css: remove @theme, add fade-in animation
+* [33m0896af9[m Update page.tsx with spinner + fade-in; add fade-in CSS to globals.css
+* [33m93b94e1[m Fix Generate Notes button with POST request
+* [33m33c6b8f[m Fix Generate Notes button with POST request
+* [33mbdd02ed[m Add project files
+* [33m1523624[m Update backend index.js with OpenAI integration
+* [33mf89745b[m Update backend index.js with OpenAI integration
+* [33m5e39331[m Update homepage with Generate Notes button
+* [33mfa11338[m Update Next.js config and package-lock
+* [33m522a319[m Update .gitignore rules
+* [33mabc88d6[m Update API dependencies
+* [33m3a31f31[m Update .gitignore to ignore env, node_modules, build outputs
+* [33m3b1d525[m Ignore .env and other generated files
+* [33m015357d[m Update .gitignore to ignore node_modules, .env, .next, dist
+* [33m65b3148[m Add .gitignore to ignore node_modules and .env
+* [33mbafab4a[m Add .gitignore to ignore node_modules and .env
+* [33m43bc38e[m Initial setup for Verified Study project
